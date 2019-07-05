@@ -1,15 +1,19 @@
+FROM beyondspider/cordova-resource:latest as cordova-resource
+
 FROM beyondspider/jenkins:latest
+
 MAINTAINER from www.beyondspider.com by admin (admin@beyondspider.com)
+
+COPY --from=cordova-resource /tmp/download/sdk-tools-linux-4333796.zip /tmp/sdk-tools-linux-4333796.zip
+COPY --from=cordova-resource /tmp/download/build-tools-28.0.3.tar.gz /tmp/build-tools-28.0.3.tar.gz
+COPY --from=cordova-resource /tmp/download/platforms-android-28.tar.gz /tmp/platforms-android-28.tar.gz
+COPY --from=cordova-resource /tmp/download/platform-tools-29.0.1.tar.gz /tmp/platform-tools-29.0.1.tar.gz
+COPY --from=cordova-resource /tmp/download/licenses.tar.gz /tmp/licenses.tar.gz
+COPY --from=cordova-resource /tmp/download/gradle-4.10.3-all.zip /opt/dist/gradle/gradle-4.10.3-all.zip
 
 RUN npm -g install cordova @quasar/cli && \
 	mkdir -p /opt/android/sdk && \
 	mkdir -p /opt/android/gradle && \
- 	curl -o /tmp/sdk-tools-linux-4333796.zip https://download.beyondspider.com/docker/sdk-tools-linux-4333796.zip && \
-	curl -o /tmp/build-tools-28.0.3.tar.gz https://download.beyondspider.com/docker/build-tools-28.0.3.tar.gz && \
-	curl -o /tmp/platforms-android-28.tar.gz https://download.beyondspider.com/docker/platforms-android-28.tar.gz && \
-	curl -o /tmp/platform-tools-29.0.1.tar.gz https://download.beyondspider.com/docker/platform-tools-29.0.1.tar.gz && \
-	curl -o /tmp/licenses.tar.gz https://download.beyondspider.com/docker/licenses.tar.gz && \
-	curl -o /opt/dist/gradle/gradle-4.10.3-all.zip https://download.beyondspider.com/docker/gradle-4.10.3-all.zip && \ 
     unzip /tmp/sdk-tools-linux-4333796.zip -d /opt/android/sdk && \
 	tar -xzvf /tmp/build-tools-28.0.3.tar.gz -C /opt/android/sdk && \
 	tar -xzvf /tmp/platforms-android-28.tar.gz -C /opt/android/sdk && \
